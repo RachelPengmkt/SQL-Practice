@@ -1,0 +1,57 @@
+574. Winning Candidate
+
+Table: Candidate
++-----+---------+
+| id  | Name    |
++-----+---------+
+| 1   | A       |
+| 2   | B       |
+| 3   | C       |
+| 4   | D       |
+| 5   | E       |
++-----+---------+  
+
+
+Table: Vote
++-----+--------------+
+| id  | CandidateId  |
++-----+--------------+
+| 1   |     2        |
+| 2   |     4        |
+| 3   |     3        |
+| 4   |     2        |
+| 5   |     5        |
++-----+--------------+
+id is the auto-increment primary key,
+CandidateId is the id appeared in Candidate table.
+Write a sql to find the name of the winning candidate, the above example will return the winner B.
+
++------+
+| Name |
++------+
+| B    |
++------+
+Notes:
+You may assume there is no tie, in other words there will be at most one winning candidate.
+
+
+#Solution 1:
+SELECT Name FROM Candidate 
+JOIN
+(SELECT CandidateID
+FROM Vote
+GROUP BY CandiateId
+ORDER BY Count(*) DESC
+lIMIT 1) AS T1
+ON Candidate.id=T1.CandidateId
+
+#Solution 2:
+
+SELECT Name FROM
+(
+SELECT Name, COUNT(*) AS cnt
+FROM Candidate JOIN Vote AS T1
+ON Candidate.id=Vote.CandidateId
+GROUP BY T1.CandidateID
+ORDER BY cnt DESC
+LIMIT 1) AS T2
